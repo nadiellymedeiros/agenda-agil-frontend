@@ -1,6 +1,5 @@
 // import React, { useState } from "react";
 
-import Image from 'next/image'
 // import { z } from 'zod'
 
 // const schema = z.object({
@@ -17,13 +16,13 @@ export default function RecuperarSenha() {
 
   return (
     <div className="mt-8 flex min-h-screen flex-col items-center">
-      <Image
+      {/* <Image
         src="/imagens/logo.png"
         alt="logo"
         width={150}
         height={150}
         className="mb-10"
-      />
+      /> */}
 
       <div className="mt-10 w-80 p-6">
         <h3 className="mb-4 hidden text-center text-[20px] font-bold text-[#FF6363]">
@@ -59,13 +58,13 @@ export default function RecuperarSenha() {
         <button
           type="submit"
           className="w-full rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-          style={{ height: '50px' }}
+          style={{ height: "50px" }}
         >
           Enviar
         </button>
         <div className="mt-4 text-center text-sm">
           <p className="text-gray-400">
-            Não tem uma conta?{' '}
+            Não tem uma conta?{" "}
             <span className="cursor-pointer text-[#6FBC85] hover:text-green-700">
               Cadastre-se agora
             </span>
@@ -73,5 +72,5 @@ export default function RecuperarSenha() {
         </div>
       </form>
     </div>
-  )
+  );
 }
