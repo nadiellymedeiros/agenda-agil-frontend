@@ -183,7 +183,7 @@ export const CadastroForm = () => {
               <Input
                 id="cellphone"
                 type="number"
-                placeholder="+55 (DDD) 99999-9999 "
+                placeholder="(DDD) 99999-9999 "
                 className={cn(
                   errors.cellphone && "border-red-500 focus:border-red-500",
                 )}
@@ -197,7 +197,7 @@ export const CadastroForm = () => {
             <Input
               id="phone"
               type="number"
-              placeholder="+55 (DDD) 99999-9999 "
+              placeholder="(DDD) 99999-9999 "
               {...register("phone")}
             />
           </div>
@@ -326,7 +326,7 @@ export const CadastroForm = () => {
               Cadastrar
             </Button>
             <Link
-              href=""
+              href="/"
               className="flex h-[50px] w-11/12 items-center justify-center rounded border-2 border-solid border-gray-500 text-lg md:w-[240px]"
             >
               Cancelar
