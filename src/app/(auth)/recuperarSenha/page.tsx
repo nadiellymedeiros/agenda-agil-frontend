@@ -58,13 +58,13 @@ export default function RecuperarSenha() {
         <button
           type="submit"
           className="w-full rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-          style={{ height: "50px" }}
+          style={{ height: '50px' }}
         >
           Enviar
         </button>
         <div className="mt-4 text-center text-sm">
           <p className="text-gray-400">
-            Não tem uma conta?{" "}
+            Não tem uma conta?{' '}
             <span className="cursor-pointer text-[#6FBC85] hover:text-green-700">
               Cadastre-se agora
             </span>
@@ -72,5 +72,5 @@ export default function RecuperarSenha() {
         </div>
       </form>
     </div>
-  );
+  )
 }

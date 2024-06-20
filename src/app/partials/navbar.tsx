@@ -1,7 +1,7 @@
-import Image from "next/image";
-import Link from "next/link";
+import Image from 'next/image'
+import Link from 'next/link'
 
-export const NavbarCadastro = () => {
+export const Navbar = () => {
   return (
     <nav className="w-full">
       <div className="m-auto flex w-8/12 items-center justify-center pt-4 md:justify-between">
@@ -22,7 +22,7 @@ export const NavbarCadastro = () => {
 
           <div className="ml-4">
             <p>
-              {" "}
+              {' '}
               Olá, <span className="font-bold">Fulana Pereira!</span>
             </p>
             <Link href="/login" className="text-green-500 hover:text-green-600">
@@ -32,5 +32,5 @@ export const NavbarCadastro = () => {
         </div>
       </div>
     </nav>
-  );
-};
+  )
+}

@@ -1,9 +1,9 @@
-import Image from "next/image";
+import Image from 'next/image'
 
 export default function AuthLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
     <div className="flex flex-1 flex-col items-center justify-center">
@@ -17,5 +17,5 @@ export default function AuthLayout({
 
       {children}
     </div>
-  );
+  )
 }
