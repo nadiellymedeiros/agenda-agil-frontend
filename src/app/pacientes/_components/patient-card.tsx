@@ -1,45 +1,45 @@
-"use client";
+'use client'
 
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { SquarePenIcon } from "lucide-react";
-import moment from "moment";
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
+import type { Patient } from '@/types/patient'
+import { SquarePenIcon } from 'lucide-react'
 
 type PatientCardProps = {
-  id: string;
-  name: string;
-  cpf: string;
-  consultationDate: Date;
-  onEdit: (patient: string) => void;
-  checked: boolean;
-  onCheckboxChange: () => void;
-};
+  data: Patient
+  onEdit: (patient: string) => void
+  checked: boolean
+  onCheckboxChange: () => void
+}
 
 export const PatientCard = ({
-  id,
-  name,
-  cpf,
-  consultationDate,
+  data,
   onEdit,
   checked,
   onCheckboxChange,
 }: PatientCardProps) => {
-  const consultation = moment(consultationDate).format("DD/MM/YYYY");
-
   return (
-    <Card className="flex w-full flex-row items-start gap-6 px-5 py-3">
+    <Card className="flex w-full flex-row items-start justify-between p-4">
       <Checkbox checked={checked} onCheckedChange={onCheckboxChange} />
 
       <div className="flex flex-col gap-1">
-        <p className="text-base font-black">{name}</p>
-        <p className="text-sm font-bold">CPF: {cpf}</p>
-        <p className="text-sm font-bold">Consulta: {consultation}</p>
+        <p className="text-base font-black">
+          {data.name} {data.surname}
+        </p>
+        <div className="flex items-center gap-1">
+          <span className="text-sm font-bold">Contato: </span>
+          <p>{data.cellphone}</p>
+        </div>
       </div>
 
-      <Button className="size-8 p-0" variant="ghost" onClick={() => onEdit(id)}>
+      <Button
+        className="size-8 p-0"
+        variant="ghost"
+        onClick={() => onEdit(data.id)}
+      >
         <SquarePenIcon className="size-4" />
       </Button>
     </Card>
-  );
-};
+  )
+}

@@ -1,56 +1,61 @@
-"use client";
+'use client'
 
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Plus, Search } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-import { CurrentDate } from "./_components/current-date";
-import { PatientCard } from "./_components/patient-card";
-
-const patientsData = [
-  {
-    id: "1",
-    name: "Amanda Ribeiro",
-    cpf: "045.852.741-01",
-    consultationDate: new Date(),
-  },
-  {
-    id: "2",
-    name: "João Silva",
-    cpf: "123.456.789-00",
-    consultationDate: new Date(),
-  },
-  {
-    id: "3",
-    name: "Maria Souza",
-    cpf: "987.654.321-99",
-    consultationDate: new Date(),
-  },
-];
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Input } from '@/components/ui/input'
+import { cn } from '@/lib/utils'
+import { api } from '@/services/api'
+import type { Patient } from '@/types/patient'
+import { Plus, Search } from 'lucide-react'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
+import { CurrentDate } from './_components/current-date'
+import { PatientCard } from './_components/patient-card'
 
 export default function PatientsPage() {
+  const [patients, setPatients] = useState<Patient[]>([])
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [selectedPatients, setSelectedPatients] = useState(
-    patientsData.map(() => false),
-  );
+    patients.map(() => false),
+  )
+
+  useEffect(() => {
+    loadPatients()
+  }, [])
+
+  const loadPatients = async () => {
+    try {
+      setIsLoading(true)
+      const { data } = await api.get<Patient[]>('/patients')
+      setPatients(data)
+    } catch {
+      toast.error('Não foi possível carregar a relação de pacientes')
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const handleSelectAll = () => {
-    const allSelected = selectedPatients.every(Boolean);
-    setSelectedPatients(selectedPatients.map(() => !allSelected));
-  };
+    const allSelected = selectedPatients.every(Boolean)
+    setSelectedPatients(selectedPatients.map(() => !allSelected))
+  }
 
-  const handleCheckboxChange = (index: any) => {
-    const newSelectedPatients = [...selectedPatients];
-    newSelectedPatients[index] = !newSelectedPatients[index];
-    setSelectedPatients(newSelectedPatients);
-  };
+  const handleCheckboxChange = (index: number) => {
+    const newSelectedPatients = [...selectedPatients]
+    newSelectedPatients[index] = !newSelectedPatients[index]
+    setSelectedPatients(newSelectedPatients)
+  }
 
   const handleEdit = (id: string) => {
-    console.log(`Editar paciente com id: ${id}`);
-  };
+    console.log(`Editar paciente com id: ${id}`)
+  }
 
-  const hasSelectedPatients = selectedPatients.some(Boolean);
+  // const handleDelete = (id: string) => {
+  //   console.log(`Deletar paciente com id: ${id}`)
+  // }
+
+  const hasSelectedPatients = selectedPatients.some(Boolean)
 
   return (
     <div className="container mt-10 flex w-full max-w-md flex-col gap-4">
@@ -70,42 +75,53 @@ export default function PatientsPage() {
           <p>Selecionar tudo</p>
         </div>
 
-        {patientsData.map((patient, index) => (
-          <PatientCard
-            key={patient.id}
-            id={patient.id}
-            name={patient.name}
-            cpf={patient.cpf}
-            consultationDate={patient.consultationDate}
-            onEdit={() => handleEdit(patient.id)}
-            checked={selectedPatients[index]}
-            onCheckboxChange={() => handleCheckboxChange(index)}
-          />
-        ))}
+        {isLoading && <span>Carregando...</span>}
+        {!isLoading &&
+          patients.map((patient, index) => (
+            <PatientCard
+              key={patient.id}
+              data={patient}
+              onEdit={() => handleEdit(patient.id)}
+              checked={selectedPatients[index]}
+              onCheckboxChange={() => handleCheckboxChange(index)}
+            />
+          ))}
       </div>
 
       <div className="relative flex w-full flex-row items-center gap-3">
         <Button
           type="submit"
-          className="h-12 w-1/2 text-lg"
-          disabled={!hasSelectedPatients}
+          className={cn(
+            'h-12 w-1/2 text-lg',
+            !hasSelectedPatients ? 'hidden' : 'block',
+          )}
+          disabled={isLoading}
         >
           Enviar lembretes
         </Button>
 
-        <Button variant="outline" className="h-12 w-1/2 text-lg">
-          <Link href="/">Cancelar</Link>
+        <Button
+          variant="outline"
+          className={cn(
+            'h-12 w-1/2 text-lg',
+            !hasSelectedPatients ? 'hidden' : 'block',
+          )}
+          onClick={() => setSelectedPatients(patients.map(() => false))}
+        >
+          Cancelar
         </Button>
 
-        <Link href="/pacientes/cadastro">
-          <Button
-            className="absolute bottom-16 right-0 rounded-full"
-            size="icon"
-          >
-            <Plus className="size-4" />
-          </Button>
-        </Link>
+        {!hasSelectedPatients && (
+          <Link href="/pacientes/cadastro">
+            <Button
+              className={cn('absolute -bottom-8 right-0 rounded-full')}
+              size="icon"
+            >
+              <Plus className="size-4" />
+            </Button>
+          </Link>
+        )}
       </div>
     </div>
-  );
+  )
 }
