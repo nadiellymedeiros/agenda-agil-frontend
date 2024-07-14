@@ -4,24 +4,36 @@ import { SucessMessage } from '@/app/_components/success-message'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { cn } from '@/lib/utils'
 import { api } from '@/services/api'
+import { brazilianStates } from '@/services/uf'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { useHookFormMask } from 'use-mask-input'
 import { z } from 'zod'
+
+const phoneRegex = /^\(\d{2}\) \d{5}-\d{4}$/
+const cepRegex = /^\d{5}-\d{3}$/
+const birthDateRegex = /^\d{2}\/\d{2}\/\d{4}$/
 
 const RegisterFormSchema = z.object({
   email: z.string().email().min(1),
   name: z.string().min(1),
   surname: z.string().min(1),
-  birthDate: z.string().min(1),
-  cellphone: z.string().min(1),
-  phone: z.string().optional(),
-  cep: z.string().optional(),
+  birthDate: z.string().min(1).regex(birthDateRegex),
+  cellphone: z.string().min(1).regex(phoneRegex),
+  phone: z.string().regex(phoneRegex).optional(),
+  cep: z.string().regex(cepRegex).optional(),
   address: z.string().min(1),
   number: z.string().min(1),
   complement: z.string().optional(),
@@ -37,11 +49,13 @@ export const RegisterForm = () => {
     register,
     handleSubmit,
     reset,
+    control,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(RegisterFormSchema),
   })
-
+  console.log(watch('cep'))
   const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false)
 
   const registerWithMask = useHookFormMask(register)
@@ -148,12 +162,12 @@ export const RegisterForm = () => {
           </Label>
           <Input
             id="birthDate"
-            type="date"
+            type="text"
             placeholder="DD/MM/AAAA"
             className={cn(
               errors.birthDate && 'border-red-500 focus:border-red-500',
             )}
-            {...register('birthDate')}
+            {...registerWithMask('birthDate', ['99/99/9999'])}
           />
         </div>
 
@@ -190,7 +204,7 @@ export const RegisterForm = () => {
               className={cn(
                 errors.cellphone && 'border-red-500 focus:border-red-500',
               )}
-              {...registerWithMask('cellphone', ['(99) 99999-9999'])}
+              {...registerWithMask('cellphone', '(99) 99999-9999')}
             />
           </div>
         </div>
@@ -203,7 +217,7 @@ export const RegisterForm = () => {
             id="phone"
             type="text"
             placeholder="(DDD) 99999-9999 "
-            {...registerWithMask('phone', ['(99) 99999-9999'])}
+            {...registerWithMask('phone', '(99) 99999-9999')}
           />
         </div>
 
@@ -212,7 +226,12 @@ export const RegisterForm = () => {
             <Label htmlFor="cep" className="font-bold">
               CEP
             </Label>
-            <Input id="cep" type="number" placeholder="00000-000" />
+            <Input
+              id="cep"
+              type="text"
+              placeholder="00000-000"
+              {...registerWithMask('cep', '99999-999')}
+            />
           </div>
 
           <div className="flex flex-col gap-1 lg:w-full lg:max-w-md">
@@ -311,14 +330,23 @@ export const RegisterForm = () => {
               >
                 Estado*
               </Label>
-              <Input
-                id="state"
-                type="text"
-                placeholder="AC"
-                className={cn(
-                  errors.state && 'border-red-500 focus:border-red-500',
+              <Controller
+                name="state"
+                control={control}
+                render={({ field }) => (
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="UF" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {brazilianStates.map((state) => (
+                        <SelectItem key={state.uf} value={state.uf}>
+                          {state.uf}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 )}
-                {...register('state')}
               />
             </div>
           </div>
